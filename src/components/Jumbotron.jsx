@@ -1,6 +1,6 @@
 import { Button, Col, Row } from "react-bootstrap";
 
-export function Jumbotron() {
+export function Jumbotron({ onClick }) {
   return (
     <Row>
       <Col>
@@ -11,7 +11,9 @@ export function Jumbotron() {
           nemo ab rem? Numquam, totam accusamus! Fugiat aspernatur id voluptas
           omnis facere!
         </p>
-        <Button variant="primary">CTA</Button>
+        <Button variant="primary" onClick={onClick}>
+          CTA
+        </Button>
       </Col>
     </Row>
   );
