@@ -1,6 +1,6 @@
 "use client";
 
-import { Navbar, Container, Nav, NavDropdown } from "react-bootstrap";
+import { Navbar, Container, Nav } from "react-bootstrap";
 import Link from "next/link";
 
 export function Navigation() {
@@ -13,8 +13,8 @@ export function Navigation() {
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="me-auto">
-            <Nav.Link href="/posts" as={Link}>
-              Posts
+            <Nav.Link href="/companies" as={Link}>
+              Companies
             </Nav.Link>
           </Nav>
         </Navbar.Collapse>
