@@ -17,7 +17,7 @@ export function LoginForm({ session }) {
       email,
       password,
       options: {
-        emailRedirectTo: `${location.origin}/auth/callback`,
+        emailRedirectTo: `${global.location.origin}/auth/callback`,
       },
     });
     router.refresh();
@@ -40,7 +40,9 @@ export function LoginForm({ session }) {
   // for the `session` to be available on first SSR render, it must be
   // fetched in a Server Component and passed down as a prop
   return session ? (
-    <button onClick={handleSignOut}>Sign out</button>
+    <button type="button" onClick={handleSignOut}>
+      Sign out
+    </button>
   ) : (
     <>
       <input
@@ -54,8 +56,12 @@ export function LoginForm({ session }) {
         onChange={(e) => setPassword(e.target.value)}
         value={password}
       />
-      <button onClick={handleSignUp}>Sign up</button>
-      <button onClick={handleSignIn}>Sign in</button>
+      <button type="button" onClick={handleSignUp}>
+        Sign up
+      </button>
+      <button type="button" onClick={handleSignIn}>
+        Sign in
+      </button>
     </>
   );
 }

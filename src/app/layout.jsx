@@ -1,9 +1,9 @@
 import "@/styles/globals.css";
-import Providers from "./providers";
 import { Container } from "react-bootstrap";
-import { Navigation } from "@/components/Navigation";
 import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
 import { cookies } from "next/headers";
+import Providers from "./providers";
+import { Navigation } from "@/components/Navigation";
 
 export const metadata = {
   title: "My Nextjs App",

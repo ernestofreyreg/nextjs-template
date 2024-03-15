@@ -42,6 +42,7 @@ export function Navigation({ session }) {
                     roundedCircle
                     width={30}
                     height={30}
+                    alt="User profile picture"
                   />
                 }
                 drop="down"

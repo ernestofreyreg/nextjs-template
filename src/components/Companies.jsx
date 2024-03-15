@@ -1,9 +1,9 @@
 "use client";
 
+import Link from "next/link";
 import { useQuery } from "@tanstack/react-query";
 import { getCompanies } from "@/services/company/api/getCompanies";
-import NewCompanyForm from "./NewCompanyForm";
-import Link from "next/link";
+import { NewCompanyForm } from "./NewCompanyForm";
 
 export function Companies() {
   const companies = useQuery({

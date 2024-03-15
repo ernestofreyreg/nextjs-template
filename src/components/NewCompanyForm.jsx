@@ -1,17 +1,17 @@
 "use client";
 
+import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { useMutation } from "@tanstack/react-query";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { createCompany } from "@/services/company/api/createCompany";
-import { z } from "zod";
 import { useInvalidateCompanies } from "@/services/company/hooks/useInvalidateCompanies";
 
 const CompanySchema = z.object({
   name: z.string().min(1, "Name is required"),
 });
 
-const NewCompanyForm = () => {
+export function NewCompanyForm() {
   const {
     register,
     handleSubmit,
@@ -33,6 +33,7 @@ const NewCompanyForm = () => {
       reset();
       refreshCompanies();
     } catch (error) {
+      // eslint-disable-next-line no-console
       console.error(error); // Handle error
     }
   };
@@ -45,6 +46,4 @@ const NewCompanyForm = () => {
       <button type="submit">Create Company</button>
     </form>
   );
-};
-
-export default NewCompanyForm;
+}

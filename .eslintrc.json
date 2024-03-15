@@ -1,5 +1,6 @@
 {
-  "extends": ["airbnb", "airbnb/hooks", "next/core-web-vitals"],
+  "extends": ["airbnb", "airbnb/hooks", "next/core-web-vitals", "prettier"],
+  "plugins": ["prettier"],
   "rules": {
     "import/prefer-default-export": "off",
     "quotes": "off",
@@ -17,6 +18,7 @@
     ],
     "object-curly-newline": ["error", { "consistent": true }],
     "react/jsx-props-no-spreading": "off",
-    "import/no-unresolved": "off"
+    "import/no-unresolved": "off",
+    "prettier/prettier": 2
   }
 }
