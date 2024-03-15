@@ -3,6 +3,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { getCompanies } from "@/services/company/api/getCompanies";
 import NewCompanyForm from "./NewCompanyForm";
+import Link from "next/link";
 
 export function Companies() {
   const companies = useQuery({
@@ -22,7 +23,9 @@ export function Companies() {
     <div>
       <ul>
         {companies.data.map((company) => (
-          <li key={company.id}>{company.name}</li>
+          <li key={company.id}>
+            <Link href={`/companies/${company.id}`}>{company.name}</Link>
+          </li>
         ))}
       </ul>
 
