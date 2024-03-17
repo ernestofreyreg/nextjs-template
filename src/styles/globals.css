@@ -1,9 +1,0 @@
-@import "bootstrap/dist/css/bootstrap.min.css";
-
-.dropdown-toggle::after {
-  content: none !important;
-  border-top: none !important;
-  border-bottom: none !important;
-  border-right: none !important;
-  border-left: none !important;
-}

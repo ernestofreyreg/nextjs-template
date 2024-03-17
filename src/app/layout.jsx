@@ -1,6 +1,5 @@
-import "@/styles/globals.css";
-import { Container } from "react-bootstrap";
 import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
+import { Container } from "@chakra-ui/react";
 import { cookies } from "next/headers";
 import Providers from "./providers";
 import { Navigation } from "@/components/Navigation";
