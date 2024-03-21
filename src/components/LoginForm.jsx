@@ -46,7 +46,7 @@ export function LoginForm({ session }) {
     <>
       <FormControl>
         <FormLabel>Email address</FormLabel>
-        <Input type="email" onChange={e => setEmail(e.target.value)}/>
+        <Input type="email" onChange={(e) => setEmail(e.target.value)} />
       </FormControl>
       <FormControl>
         <FormLabel>Password</FormLabel>
