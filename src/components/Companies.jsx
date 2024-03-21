@@ -7,8 +7,8 @@ import { NewCompanyForm } from "./NewCompanyForm";
 
 export function Companies() {
   const companies = useQuery({
-    queryKey: "companies",
-    queryFn: getCompanies,
+    queryKey: ["companies"],
+    queryFn: () => getCompanies(),
   });
 
   if (companies.isLoading) {

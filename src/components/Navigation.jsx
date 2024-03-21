@@ -59,8 +59,8 @@ export function Navigation({ session }) {
           <Link px={2} href="/about">
             About
           </Link>
-          <Link px={2} href="/services">
-            Services
+          <Link px={2} href="/companies">
+            Companies
           </Link>
           <Link px={2} href="/contact">
             Contact
