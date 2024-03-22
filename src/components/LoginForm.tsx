@@ -3,7 +3,6 @@
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { useQueryClient } from "@tanstack/react-query";
 import { FormControl, FormLabel, Button, Input } from "@chakra-ui/react";
 
 export function LoginForm({ session }) {
@@ -11,7 +10,6 @@ export function LoginForm({ session }) {
   const [password, setPassword] = useState("");
   const router = useRouter();
   const supabase = createClientComponentClient();
-  const queryClient = useQueryClient();
 
   const handleSignUp = async () => {
     await supabase.auth.signUp({
@@ -29,12 +27,6 @@ export function LoginForm({ session }) {
       email,
       password,
     });
-    router.refresh();
-  };
-
-  const handleSignOut = async () => {
-    queryClient.removeQueries();
-    await supabase.auth.signOut();
     router.refresh();
   };
 
