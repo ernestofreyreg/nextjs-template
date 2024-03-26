@@ -1,9 +1,9 @@
-import { Login } from "@/components/Login";
+import { LoginScreen } from "@/components/login/LoginScreen";
 
 export default async function Page() {
   return (
     <div>
-      <Login />
+      <LoginScreen />
     </div>
   );
 }

@@ -1,4 +1,7 @@
+"use client";
+
 import { FC, useCallback, useState } from "react";
+import { useRouter } from "next/navigation";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { Database } from "@/types/supabase";
 import { LoginView } from "./LoginView";
@@ -7,6 +10,7 @@ import { LoginFormValues, VerifyFormValues } from "./schema";
 interface LoginScreenProps {}
 
 export const LoginScreen: FC<LoginScreenProps> = () => {
+  const router = useRouter();
   const [step, setStep] = useState<"login" | "verify">("login");
   const [phone, setPhone] = useState("");
   const [loading, setLoading] = useState(false);
@@ -45,9 +49,12 @@ export const LoginScreen: FC<LoginScreenProps> = () => {
       setVerifying(false);
       if (verifyError) {
         setError(verifyError.message);
+      } else {
+        // Handle successful verification
+        router.push("/dashboard");
       }
     },
-    [phone],
+    [phone, router],
   );
 
   const handlGoBackToPhone = useCallback(() => {
