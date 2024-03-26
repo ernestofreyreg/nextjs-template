@@ -1,6 +1,7 @@
 import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
 import { cookies } from "next/headers";
 import Providers from "./providers";
+import "@/styles/globals.css";
 
 export const metadata = {
   title: "My Nextjs App",

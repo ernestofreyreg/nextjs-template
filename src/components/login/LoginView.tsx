@@ -39,13 +39,11 @@ export const LoginView: FC<LogindivProps> = ({
   });
 
   return (
-    <div className="bg-gray-100 w-full h-full">
-      <div className="h-full w-full div">
-        <div className="div items-center">
-          <div>
-            {step === "login" && "Enter your phone number"}
-            {step === "verify" && "Enter the code sent to your phone"}
-          </div>
+    <div>
+      <div>
+        <div>
+          {step === "login" && "Enter your phone number"}
+          {step === "verify" && "Enter the code sent to your phone"}
         </div>
 
         {step === "login" && (
@@ -55,7 +53,11 @@ export const LoginView: FC<LogindivProps> = ({
               control={form.control}
               name="phone"
               render={({ field }) => (
-                <input onChange={field.onChange} value={field.value} />
+                <input
+                  className="border px-2 py-1 rounded"
+                  onChange={field.onChange}
+                  value={field.value}
+                />
               )}
             />
 
