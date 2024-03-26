@@ -10,7 +10,7 @@ export async function getCompanyById(id) {
     .single();
 
   if (error) {
-    throw error;
+    throw new Error(error.message);
   }
 
   return company;

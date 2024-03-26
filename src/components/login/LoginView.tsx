@@ -1,7 +1,6 @@
 import { FC } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Button, Flex, Input, Text } from "@chakra-ui/react";
 import {
   LoginFormSchema,
   LoginFormValues,
@@ -9,7 +8,7 @@ import {
   VerifyFormValues,
 } from "./schema";
 
-interface LoginFlexProps {
+interface LogindivProps {
   step: "login" | "verify";
   onLogin: (data: LoginFormValues) => void;
   onVerify: (data: VerifyFormValues) => void;
@@ -19,7 +18,7 @@ interface LoginFlexProps {
   isError?: string;
 }
 
-export const LoginView: FC<LoginFlexProps> = ({
+export const LoginView: FC<LogindivProps> = ({
   step,
   onLogin,
   onVerify,
@@ -40,66 +39,64 @@ export const LoginView: FC<LoginFlexProps> = ({
   });
 
   return (
-    <Flex className="bg-gray-100 w-full h-full">
-      <Flex className="h-full w-full flex">
-        <Flex className="flex items-center">
-          <Text>
+    <div className="bg-gray-100 w-full h-full">
+      <div className="h-full w-full div">
+        <div className="div items-center">
+          <div>
             {step === "login" && "Enter your phone number"}
             {step === "verify" && "Enter the code sent to your phone"}
-          </Text>
-        </Flex>
+          </div>
+        </div>
 
         {step === "login" && (
-          <Flex className="flex items-start mx-8">
-            <Text className="mb-2">Phone number</Text>
+          <div className="div items-start mx-8">
+            <div className="mb-2">Phone number</div>
             <Controller
               control={form.control}
               name="phone"
               render={({ field }) => (
-                <Input onChange={field.onChange} value={field.value} />
+                <input onChange={field.onChange} value={field.value} />
               )}
             />
 
-            <Button
-              title="Start"
-              onClick={form.handleSubmit(onLogin)}
-              isLoading={isLoading}
-            />
+            <button type="button" onClick={form.handleSubmit(onLogin)}>
+              {isLoading ? "Loading" : "Start"}
+            </button>
 
             {isError && (
-              <Flex className="w-full">
-                <Text className="text-red-500 text-center">{isError}</Text>
-              </Flex>
+              <div className="w-full">
+                <div className="div-red-500 div-center">{isError}</div>
+              </div>
             )}
-          </Flex>
+          </div>
         )}
         {step === "verify" && (
-          <Flex className="flex items-start mx-8">
-            <Text className="mb-2">Security code</Text>
+          <div className="div items-start mx-8">
+            <div className="mb-2">Security code</div>
             <Controller
               control={verifyForm.control}
               name="token"
               render={({ field }) => (
-                <Input onChange={field.onChange} value={field.value} />
+                <input onChange={field.onChange} value={field.value} />
               )}
             />
 
-            <Button
-              title="Start"
-              onClick={verifyForm.handleSubmit(onVerify)}
-              isLoading={isVerifying}
-            />
+            <button onClick={verifyForm.handleSubmit(onVerify)} type="button">
+              {isVerifying ? "Loading" : "Verify"}
+            </button>
 
             {isError && (
-              <Flex className="w-full">
-                <Text className="text-red-500 text-center">{isError}</Text>
-              </Flex>
+              <div className="w-full">
+                <div className="div-red-500 div-center">{isError}</div>
+              </div>
             )}
 
-            <Button title="Go back" onClick={onBackToPhone} />
-          </Flex>
+            <button type="button" onClick={onBackToPhone}>
+              Reset
+            </button>
+          </div>
         )}
-      </Flex>
-    </Flex>
+      </div>
+    </div>
   );
 };

@@ -1,8 +1,6 @@
 import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
-import { Container } from "@chakra-ui/react";
 import { cookies } from "next/headers";
 import Providers from "./providers";
-import { Navigation } from "@/components/Navigation";
 
 export const metadata = {
   title: "My Nextjs App",
@@ -20,8 +18,15 @@ export default async function RootLayout({ children }) {
     <html lang="en">
       <body>
         <Providers>
-          <Navigation session={session} />
-          <Container>{children}</Container>
+          {session && (
+            <div>
+              <span>Logged in as {session.user.email}</span>
+              <button type="button" onClick={() => supabase.auth.signOut()}>
+                Sign out
+              </button>
+            </div>
+          )}
+          <div>{children}</div>
         </Providers>
       </body>
     </html>

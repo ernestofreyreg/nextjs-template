@@ -9,7 +9,7 @@ export async function getCompanies(_supabase?: SupabaseClient<Database>) {
     .select("*");
 
   if (error) {
-    throw error;
+    throw new Error(error.message);
   }
 
   return companies;
