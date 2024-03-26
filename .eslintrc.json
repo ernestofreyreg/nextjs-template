@@ -23,6 +23,13 @@
     "react/jsx-props-no-spreading": "off",
     "import/no-unresolved": "off",
     "prettier/prettier": 2,
-    "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx", ".ts", ".tsx"] }]
+    "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx", ".ts", ".tsx"] }],
+    "react/function-component-definition": [
+      "error",
+      {
+        "namedComponents": ["arrow-function", "function-declaration"],
+        "unnamedComponents": ["arrow-function" ]
+      }
+    ]
   }
 }
