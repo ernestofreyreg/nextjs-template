@@ -1,15 +1,24 @@
 "use client";
 
-import { FC, useCallback, useState } from "react";
 import { useRouter } from "next/navigation";
+import { useCallback, useState } from "react";
+import {
+  LoginFormValues,
+  VerifyFormValues,
+} from "@/app/(auth)/login/components/schema";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { Database } from "@/types/supabase";
-import { LoginView } from "./LoginView";
-import { LoginFormValues, VerifyFormValues } from "./schema";
+import { LoginView } from "@/app/(auth)/login/components/LoginView";
 
-interface LoginScreenProps {}
+function cleanPhoneNumber(phone: string) {
+  const cleaned = phone.replace(/[^\d]/g, "");
+  if (cleaned.startsWith("1")) {
+    return cleaned.substring(1);
+  }
+  return cleaned;
+}
 
-export const LoginScreen: FC<LoginScreenProps> = () => {
+export default function Login() {
   const router = useRouter();
   const [step, setStep] = useState<"login" | "verify">("login");
   const [phone, setPhone] = useState("");
@@ -21,8 +30,10 @@ export const LoginScreen: FC<LoginScreenProps> = () => {
     setError(undefined);
     setLoading(true);
     const supabase = createClientComponentClient();
+    const pNumber = cleanPhoneNumber(login.phone);
+
     const { error: loginError } = await supabase.auth.signInWithOtp({
-      phone: `+1${login.phone}`,
+      phone: `+1${pNumber}`,
     });
 
     if (loginError) {
@@ -31,7 +42,7 @@ export const LoginScreen: FC<LoginScreenProps> = () => {
       setPhone("");
     } else {
       setLoading(false);
-      setPhone(login.phone);
+      setPhone(pNumber);
       setStep("verify");
     }
   }, []);
@@ -50,8 +61,7 @@ export const LoginScreen: FC<LoginScreenProps> = () => {
       if (verifyError) {
         setError(verifyError.message);
       } else {
-        // Handle successful verification
-        router.push("/dashboard");
+        router.push("/");
       }
     },
     [phone, router],
@@ -68,10 +78,10 @@ export const LoginScreen: FC<LoginScreenProps> = () => {
       step={step}
       onLogin={handleLogin}
       onVerify={handleVerify}
+      onBackToPhone={handlGoBackToPhone}
       isLoading={loading}
       isVerifying={verifying}
       isError={error}
-      onBackToPhone={handlGoBackToPhone}
     />
   );
-};
+}

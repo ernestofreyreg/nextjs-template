@@ -1,6 +1,7 @@
 import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
 import { cookies } from "next/headers";
-import Providers from "./providers";
+import { Navigation } from "@/components/Navigation";
+import Providers from "../../services/providers";
 import "@/styles/globals.css";
 
 export const metadata = {
@@ -19,14 +20,7 @@ export default async function RootLayout({ children }) {
     <html lang="en">
       <body>
         <Providers>
-          {session && (
-            <div>
-              <span>Logged in as {session.user.email}</span>
-              <button type="button" onClick={() => supabase.auth.signOut()}>
-                Sign out
-              </button>
-            </div>
-          )}
+          {session && <Navigation session={session} />}
           <div>{children}</div>
         </Providers>
       </body>
