@@ -14,4 +14,6 @@ export async function protectPage() {
   if (!session) {
     redirect("/");
   }
+
+  return session;
 }

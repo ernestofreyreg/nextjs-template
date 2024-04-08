@@ -1,6 +1,5 @@
-import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
-import { cookies } from "next/headers";
-import { Navigation } from "@/components/Navigation";
+import { Frame } from "@/components/frame/Frame";
+import { protectPage } from "@/services/protectPage";
 import Providers from "../../services/providers";
 import "@/styles/globals.css";
 
@@ -10,18 +9,13 @@ export const metadata = {
 };
 
 export default async function RootLayout({ children }) {
-  const supabase = createServerComponentClient({ cookies });
-
-  const {
-    data: { session },
-  } = await supabase.auth.getSession();
+  const session = await protectPage();
 
   return (
     <html lang="en">
       <body>
         <Providers>
-          {session && <Navigation session={session} />}
-          <div>{children}</div>
+          <Frame session={session}>{children}</Frame>
         </Providers>
       </body>
     </html>
