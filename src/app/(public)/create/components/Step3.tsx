@@ -1,6 +1,6 @@
 import { FC, useMemo } from "react";
 import { useFormContext } from "react-hook-form";
-import { differenceInHours, format, parse } from "date-fns";
+import { differenceInHours, format, isValid, parse } from "date-fns";
 import {
   FormActionsProps,
   ScheduleFormValues,
@@ -45,6 +45,15 @@ export const Step3: FC<Step3Props> = (props) => {
     const shift2 = values.shift_time_1
       ? parse(values.shift_time_1, "HH:mm", new Date())
       : undefined;
+
+    if (
+      !isValid(starts) ||
+      !isValid(ends) ||
+      !isValid(shift1) ||
+      !isValid(shift2)
+    ) {
+      return [];
+    }
     if (shifts === 1) {
       return [
         {
@@ -102,6 +111,7 @@ export const Step3: FC<Step3Props> = (props) => {
     <FormFrame
       title="Let's create a new schedule"
       subTitle="Set opening, closing and shifts change times"
+      currentStep={3}
       {...props}
     >
       <div className="grid grid-cols-1 md:grid-cols-2 gap-3 justify-between">

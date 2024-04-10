@@ -4,13 +4,15 @@ import { useRouter } from "next/navigation";
 import { useCallback, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import {
+  RolesFormSchema,
+  RolesFormValues,
   ScheduleFormSchema,
   ScheduleFormValues,
 } from "@/app/(public)/create/components/schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Step1 } from "./components/Step1";
 import { Step2 } from "./components/Step2";
-import { Step3 } from "@/app/(public)/create/components/Step3";
+import { Step3 } from "./components/Step3";
 
 type FormStep = "days" | "shifts" | "times" | "roles";
 
@@ -33,6 +35,13 @@ export default function CreateSchedulePage() {
     },
     resolver: zodResolver(ScheduleFormSchema),
   });
+  const rolesForm = useForm<RolesFormValues>({
+    resolver: zodResolver(RolesFormSchema),
+    defaultValues: {
+      roles: [],
+    },
+  });
+
   const [step, setStep] = useState<FormStep>("days");
 
   const handlerNext = useCallback(
@@ -49,34 +58,51 @@ export default function CreateSchedulePage() {
     router.back();
   }, [router]);
 
+  const handleCreateSchedule = useCallback(() => {
+    console.log(form.getValues());
+  }, [form]);
+
   return (
-    <FormProvider {...form}>
-      {step === "days" && (
-        <Step1
-          nextButtonLabel="Select shifts"
-          previousButtonLabel="Cancel"
-          onNextButtonOnClick={handlerNext("shifts")}
-          onPreviousButtonOnClick={handleGoBack}
-        />
-      )}
+    <>
+      <FormProvider {...form}>
+        {step === "days" && (
+          <Step1
+            nextButtonLabel="Select shifts"
+            previousButtonLabel="Cancel"
+            onNextButtonOnClick={handlerNext("shifts")}
+            onPreviousButtonOnClick={handleGoBack}
+          />
+        )}
 
-      {step === "shifts" && (
-        <Step2
-          nextButtonLabel="Set hours"
-          previousButtonLabel="Change days"
-          onNextButtonOnClick={handlerNext("times")}
-          onPreviousButtonOnClick={handlerNext("days")}
-        />
-      )}
+        {step === "shifts" && (
+          <Step2
+            nextButtonLabel="Set hours"
+            previousButtonLabel="Change days"
+            onNextButtonOnClick={handlerNext("times")}
+            onPreviousButtonOnClick={handlerNext("days")}
+          />
+        )}
 
-      {step === "times" && (
-        <Step3
-          nextButtonLabel="Set roles"
-          onNextButtonOnClick={handlerNext("roles")}
-          previousButtonLabel="Change shifts"
-          onPreviousButtonOnClick={handlerNext("shifts")}
-        />
-      )}
-    </FormProvider>
+        {step === "times" && (
+          <Step3
+            nextButtonLabel="Set roles"
+            onNextButtonOnClick={handlerNext("roles")}
+            previousButtonLabel="Change shifts"
+            onPreviousButtonOnClick={handlerNext("shifts")}
+          />
+        )}
+      </FormProvider>
+
+      {/*<FormProvider {...rolesForm}>*/}
+      {/*  {step === "roles" && (*/}
+      {/*    <Step4*/}
+      {/*      nextButtonLabel="Save"*/}
+      {/*      onNextButtonOnClick={handleCreateSchedule}*/}
+      {/*      previousButtonLabel="Change times"*/}
+      {/*      onPreviousButtonOnClick={handlerNext("times")}*/}
+      {/*    />*/}
+      {/*  )}*/}
+      {/*</FormProvider>*/}
+    </>
   );
 }

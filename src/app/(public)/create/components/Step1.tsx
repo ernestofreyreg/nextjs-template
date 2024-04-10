@@ -69,10 +69,8 @@ export const Step1: FC<Step1Props> = (props) => {
     });
   }, [form]);
 
-  const handleClear = useCallback(() => {
-    days.forEach((day, index) => {
-      form.setValue(fieldNames[index], false);
-    });
+  const handleClear = useCallback(async () => {
+    form.reset();
   }, [form]);
 
   useEffect(() => {
@@ -83,6 +81,7 @@ export const Step1: FC<Step1Props> = (props) => {
     <FormFrame
       title="Let's create a new schedule"
       subTitle="Select the days you want to create the schedule for"
+      currentStep={1}
       {...props}
     >
       <div className="grid grid-cols-1 md:grid-cols-2 gap-3 justify-between">

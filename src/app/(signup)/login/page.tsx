@@ -5,10 +5,10 @@ import { useCallback, useState } from "react";
 import {
   LoginFormValues,
   VerifyFormValues,
-} from "@/app/(auth)/login/components/schema";
+} from "@/app/(signup)/login/components/schema";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { Database } from "@/types/supabase";
-import { LoginView } from "@/app/(auth)/login/components/LoginView";
+import { LoginView } from "@/app/(signup)/login/components/LoginView";
 
 function cleanPhoneNumber(phone: string) {
   const cleaned = phone.replace(/[^\d]/g, "");

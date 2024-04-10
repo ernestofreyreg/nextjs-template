@@ -7,7 +7,7 @@ import {
   LoginFormValues,
   VerifyFormSchema,
   VerifyFormValues,
-} from "@/app/(auth)/login/components/schema";
+} from "@/app/(signup)/login/components/schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Form,

@@ -42,3 +42,17 @@ export type FormActionsProps = {
   previousButtonLabel: string;
   onPreviousButtonOnClick: () => void;
 };
+
+export const RoleSchema = z.object({
+  name: z.string().min(1, "Role name is required"),
+  required_staff: z.number().int().min(1, "Required staff is required"),
+  existing_staff: z.number().int().min(0, "Existing staff is required"),
+  rate_cents: z.optional(z.number().int()),
+  hours_per_week: z.optional(z.number().int()),
+});
+export type Role = z.infer<typeof RoleSchema>;
+
+export const RolesFormSchema = z.object({
+  roles: z.array(RoleSchema).nonempty("At least one role is required"),
+});
+export type RolesFormValues = z.infer<typeof RolesFormSchema>;

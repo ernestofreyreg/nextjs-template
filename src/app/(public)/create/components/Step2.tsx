@@ -22,6 +22,7 @@ export const Step2: FC<Step2Props> = (props) => {
     <FormFrame
       title="Let's create a new schedule"
       subTitle="In how many shifts will the work day be divided?"
+      currentStep={2}
       {...props}
     >
       <div className="grid grid-cols-1 md:grid-cols-2 gap-3 justify-between">

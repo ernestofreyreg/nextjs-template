@@ -2,7 +2,7 @@ import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
 import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
 
-export async function protectPage() {
+export async function protectPage(dontRedirect?: boolean) {
   const supabase = createServerComponentClient({
     cookies,
   });
@@ -11,7 +11,7 @@ export async function protectPage() {
     data: { session },
   } = await supabase.auth.getSession();
 
-  if (!session) {
+  if (!session && !dontRedirect) {
     redirect("/");
   }
 
