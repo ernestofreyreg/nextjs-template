@@ -34,8 +34,11 @@ export const FormFrame: FC<PropsWithChildren<FormFrameProps>> = ({
       <h2 className="text-xl md:text-3xl font-normal">{subTitle}</h2>
     </div>
 
-    {children}
+    <div>{children}</div>
 
+    <div className="text-sm text-muted-foreground">
+      Once you finish, you can always go back and change your selection
+    </div>
     <div className="flex flex-col-reverse md:flex-row gap-2 items-center justify-between">
       <Button
         variant="outline"

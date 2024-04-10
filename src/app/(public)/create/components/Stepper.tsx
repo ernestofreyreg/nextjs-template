@@ -1,5 +1,6 @@
 import { FC } from "react";
 import { clsx } from "clsx";
+import { BsCheck } from "react-icons/bs";
 
 export interface StepperProps {
   steps: string[];
@@ -20,9 +21,14 @@ export const Stepper: FC<StepperProps> = ({ steps, currentStep }) => (
               currentStep > index + 1 && "bg-green-500 text-white",
             )}
           >
-            {index + 1}
+            {index + 1 >= currentStep ? index + 1 : <BsCheck />}
           </span>
-          <div className="ms-2 w-full h-px flex-1 bg-gray-200 group-last:hidden" />
+          <div
+            className={clsx(
+              "ms-2 w-full h-px flex-1 bg-gray-200 group-last:hidden",
+              currentStep > index + 1 && "bg-green-500",
+            )}
+          />
         </div>
         <div className="mt-3">
           <span className="block text-sm font-medium text-gray-800">

@@ -13,6 +13,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Step1 } from "./components/Step1";
 import { Step2 } from "./components/Step2";
 import { Step3 } from "./components/Step3";
+import { Step4 } from "@/app/(public)/create/components/Step4";
 
 type FormStep = "days" | "shifts" | "times" | "roles";
 
@@ -93,16 +94,16 @@ export default function CreateSchedulePage() {
         )}
       </FormProvider>
 
-      {/*<FormProvider {...rolesForm}>*/}
-      {/*  {step === "roles" && (*/}
-      {/*    <Step4*/}
-      {/*      nextButtonLabel="Save"*/}
-      {/*      onNextButtonOnClick={handleCreateSchedule}*/}
-      {/*      previousButtonLabel="Change times"*/}
-      {/*      onPreviousButtonOnClick={handlerNext("times")}*/}
-      {/*    />*/}
-      {/*  )}*/}
-      {/*</FormProvider>*/}
+      <FormProvider {...rolesForm}>
+        {step === "roles" && (
+          <Step4
+            nextButtonLabel="Create Schedule"
+            onNextButtonOnClick={handleCreateSchedule}
+            previousButtonLabel="Change times"
+            onPreviousButtonOnClick={handlerNext("times")}
+          />
+        )}
+      </FormProvider>
     </>
   );
 }
