@@ -1,8 +1,9 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
+import { repeat } from "ramda";
 import {
   RolesFormSchema,
   RolesFormValues,
@@ -13,22 +14,17 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Step1 } from "./components/Step1";
 import { Step2 } from "./components/Step2";
 import { Step3 } from "./components/Step3";
-import { Step4 } from "@/app/(public)/create/components/Step4";
+import { Step4 } from "./components/Step4";
 
-type FormStep = "days" | "shifts" | "times" | "roles";
+const steps = ["days", "shifts", "times", "roles"] as const;
+type FormStep = (typeof steps)[number];
 
 export default function CreateSchedulePage() {
   const router = useRouter();
   const form = useForm<ScheduleFormValues>({
     defaultValues: {
-      open_0: false,
-      open_1: false,
-      open_2: false,
-      open_3: false,
-      open_4: false,
-      open_5: false,
-      open_6: false,
-      shifts: "1",
+      open_days: repeat(false, 7),
+      shifts: 1,
       opening_time: "08:00",
       closing_time: "20:00",
       shift_time_0: "12:00",
@@ -39,7 +35,14 @@ export default function CreateSchedulePage() {
   const rolesForm = useForm<RolesFormValues>({
     resolver: zodResolver(RolesFormSchema),
     defaultValues: {
-      roles: [],
+      roles: [
+        {
+          name: "",
+          rate_cents: 0,
+          required_staff: repeat([1], 7),
+          existing_staff: 0,
+        },
+      ],
     },
   });
 
@@ -59,9 +62,38 @@ export default function CreateSchedulePage() {
     router.back();
   }, [router]);
 
-  const handleCreateSchedule = useCallback(() => {
+  const shifts = form.watch("shifts");
+
+  const updateShiftsRequiredStaff = useCallback(
+    (rolesForm: RolesFormValues, shifts: 1 | 2 | 3) => {
+      rolesForm.roles.forEach((role, index) => {
+        const requiredStaff = role.required_staff;
+        const newRequiredStaff = requiredStaff.map((staff) => {
+          return staff.length === shifts ? staff : repeat(1, shifts);
+        });
+
+        rolesForm.roles[index].required_staff = newRequiredStaff;
+      });
+    },
+    [],
+  );
+
+  useEffect(() => {
+    updateShiftsRequiredStaff(rolesForm.getValues(), shifts);
+  }, [rolesForm, shifts, updateShiftsRequiredStaff]);
+
+  const handleCreateSchedule = useCallback(async () => {
+    await form.trigger();
+    await rolesForm.trigger();
     console.log(form.getValues());
-  }, [form]);
+    console.log(rolesForm.getValues());
+  }, [form, rolesForm]);
+
+  const handleStepChange = useCallback((newStep: number) => {
+    setStep(steps.find((_, index) => index === newStep) || "days");
+  }, []);
+
+  const scheduleValues = form.getValues();
 
   return (
     <>
@@ -72,6 +104,7 @@ export default function CreateSchedulePage() {
             previousButtonLabel="Cancel"
             onNextButtonOnClick={handlerNext("shifts")}
             onPreviousButtonOnClick={handleGoBack}
+            onStepChange={handleStepChange}
           />
         )}
 
@@ -81,6 +114,7 @@ export default function CreateSchedulePage() {
             previousButtonLabel="Change days"
             onNextButtonOnClick={handlerNext("times")}
             onPreviousButtonOnClick={handlerNext("days")}
+            onStepChange={handleStepChange}
           />
         )}
 
@@ -90,20 +124,23 @@ export default function CreateSchedulePage() {
             onNextButtonOnClick={handlerNext("roles")}
             previousButtonLabel="Change shifts"
             onPreviousButtonOnClick={handlerNext("shifts")}
+            onStepChange={handleStepChange}
           />
         )}
       </FormProvider>
 
-      <FormProvider {...rolesForm}>
-        {step === "roles" && (
+      {step === "roles" && (
+        <FormProvider {...rolesForm}>
           <Step4
+            scheduleValues={scheduleValues}
             nextButtonLabel="Create Schedule"
             onNextButtonOnClick={handleCreateSchedule}
             previousButtonLabel="Change times"
             onPreviousButtonOnClick={handlerNext("times")}
+            onStepChange={handleStepChange}
           />
-        )}
-      </FormProvider>
+        </FormProvider>
+      )}
     </>
   );
 }

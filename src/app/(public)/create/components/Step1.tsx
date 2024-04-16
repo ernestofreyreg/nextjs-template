@@ -1,4 +1,5 @@
-import { FC, Fragment, useCallback, useEffect } from "react";
+import { FC, Fragment, useCallback } from "react";
+import { repeat } from "ramda";
 import { useFormContext } from "react-hook-form";
 import {
   FormActionsProps,
@@ -10,13 +11,10 @@ import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import {
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
 } from "@/components/ui/form";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { AlertCircle } from "lucide-react";
 
 const days = [
   "Monday",
@@ -28,60 +26,35 @@ const days = [
   "Sunday",
 ];
 
-const fieldNames: Partial<Array<keyof ScheduleFormValues>> = [
-  "open_0",
-  "open_1",
-  "open_2",
-  "open_3",
-  "open_4",
-  "open_5",
-  "open_6",
-];
+type Step1Props = {
+  onStepChange: (step: number) => void;
+} & FormActionsProps;
 
-type Step1Props = {} & FormActionsProps;
-
-export const Step1: FC<Step1Props> = (props) => {
+export const Step1: FC<Step1Props> = ({ onStepChange, ...props }) => {
   const form = useFormContext<ScheduleFormValues>();
 
   const handleSelectAll = useCallback(() => {
-    days.forEach((day, index) => {
-      form.setValue(fieldNames[index], true);
-    });
+    form.setValue("open_days", repeat(true, 7));
   }, [form]);
 
   const handleSelectWeekends = useCallback(() => {
-    days.forEach((day, index) => {
-      if (index === 5 || index === 6) {
-        form.setValue(fieldNames[index], true);
-      } else {
-        form.setValue(fieldNames[index], false);
-      }
-    });
+    form.setValue("open_days", repeat(false, 5).concat(repeat(true, 2)));
   }, [form]);
 
   const handleSelectWeekdays = useCallback(() => {
-    days.forEach((day, index) => {
-      if (index === 5 || index === 6) {
-        form.setValue(fieldNames[index], false);
-      } else {
-        form.setValue(fieldNames[index], true);
-      }
-    });
+    form.setValue("open_days", repeat(true, 5).concat(repeat(false, 2)));
   }, [form]);
 
   const handleClear = useCallback(async () => {
     form.reset();
   }, [form]);
 
-  useEffect(() => {
-    console.log(form.formState.errors);
-  }, [form.formState.errors]);
-
   return (
     <FormFrame
       title="Let's create a new schedule"
       subTitle="Select the days you want to create the schedule for"
       currentStep={1}
+      onStepClick={onStepChange}
       {...props}
     >
       <div className="grid grid-cols-1 md:grid-cols-2 gap-3 justify-between">
@@ -90,7 +63,7 @@ export const Step1: FC<Step1Props> = (props) => {
             <Fragment key={day}>
               <FormField
                 control={form.control}
-                name={fieldNames[index]}
+                name={`open_days.${index}`}
                 render={({ field }) => (
                   <FormItem className="flex flex-row items-start space-x-3 space-y-0 p-1">
                     <FormControl>
@@ -122,17 +95,6 @@ export const Step1: FC<Step1Props> = (props) => {
             Clear all
           </Button>
         </div>
-      </div>
-      <div>
-        {(form.formState.errors as any).opens && (
-          <Alert variant="destructive">
-            <AlertCircle className="h-4 w-4" />
-            <AlertTitle>Error</AlertTitle>
-            <AlertDescription>
-              Select at least one day to continue
-            </AlertDescription>
-          </Alert>
-        )}
       </div>
     </FormFrame>
   );

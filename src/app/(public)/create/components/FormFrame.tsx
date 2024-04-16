@@ -12,6 +12,7 @@ interface FormFrameProps {
   previousButtonLabel: string;
   onPreviousButtonOnClick: () => void;
   currentStep: number;
+  onStepClick?: (step: number) => void;
 }
 
 export const FormFrame: FC<PropsWithChildren<FormFrameProps>> = ({
@@ -23,11 +24,13 @@ export const FormFrame: FC<PropsWithChildren<FormFrameProps>> = ({
   nextButtonLabel,
   onNextButtonOnClick,
   currentStep,
+  onStepClick,
 }) => (
   <div className="flex flex-col gap-4 p-2 md:p-0 md:min-h-[500px] w-full md:w-[550px]">
     <Stepper
       steps={["Days", "Shifts", "Hours", "Roles"]}
       currentStep={currentStep}
+      onStepClick={onStepClick}
     />
     <div className="flex flex-col gap-3">
       <p className="text-md md:text-xl font-light text-gray-500">{title}</p>

@@ -13,9 +13,11 @@ import {
 } from "@/components/ui/form";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
-type Step2Props = {} & FormActionsProps;
+type Step2Props = {
+  onStepChange: (step: number) => void;
+} & FormActionsProps;
 
-export const Step2: FC<Step2Props> = (props) => {
+export const Step2: FC<Step2Props> = ({ onStepChange, ...props }) => {
   const form = useFormContext<ScheduleFormValues>();
 
   return (
@@ -23,6 +25,7 @@ export const Step2: FC<Step2Props> = (props) => {
       title="Let's create a new schedule"
       subTitle="In how many shifts will the work day be divided?"
       currentStep={2}
+      onStepClick={onStepChange}
       {...props}
     >
       <div className="grid grid-cols-1 md:grid-cols-2 gap-3 justify-between">
@@ -35,8 +38,10 @@ export const Step2: FC<Step2Props> = (props) => {
                 <FormLabel>Every day will have:</FormLabel>
                 <FormControl>
                   <RadioGroup
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
+                    onValueChange={(value) => {
+                      field.onChange(parseInt(value, 10));
+                    }}
+                    defaultValue={field.value.toString()}
                     className="flex flex-col space-y-1"
                   >
                     <FormItem className="flex items-center space-x-3 space-y-0">

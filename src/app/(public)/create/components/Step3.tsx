@@ -1,7 +1,8 @@
 import { FC, useMemo } from "react";
 import { useFormContext } from "react-hook-form";
-import { differenceInHours, format, isValid, parse } from "date-fns";
+import { format } from "date-fns";
 import {
+  calculateShiftHours,
   FormActionsProps,
   ScheduleFormValues,
 } from "@/app/(public)/create/components/schemas";
@@ -14,104 +15,23 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 
-type Step3Props = {} & FormActionsProps;
+type Step3Props = {
+  onStepChange: (step: number) => void;
+} & FormActionsProps;
 
-const hoursBetween = (start: Date, end: Date) => {
-  if (end >= start) {
-    return differenceInHours(end, start);
-  }
-
-  return (
-    differenceInHours(parse("23:59", "HH:mm", new Date()), start, {
-      roundingMethod: "ceil",
-    }) +
-    differenceInHours(end, parse("00:00", "HH:mm", new Date()), {
-      roundingMethod: "ceil",
-    })
-  );
-};
-
-export const Step3: FC<Step3Props> = (props) => {
+export const Step3: FC<Step3Props> = ({ onStepChange, ...props }) => {
   const form = useFormContext<ScheduleFormValues>();
 
-  const shifts = useMemo(() => parseInt(form.watch("shifts"), 10), [form]);
+  const shifts = form.watch("shifts");
   const values = form.watch();
-  const shiftHours = useMemo(() => {
-    const starts = parse(values.opening_time, "HH:mm", new Date());
-    const ends = parse(values.closing_time, "HH:mm", new Date());
-    const shift1 = values.shift_time_0
-      ? parse(values.shift_time_0, "HH:mm", new Date())
-      : undefined;
-    const shift2 = values.shift_time_1
-      ? parse(values.shift_time_1, "HH:mm", new Date())
-      : undefined;
-
-    if (
-      !isValid(starts) ||
-      !isValid(ends) ||
-      !isValid(shift1) ||
-      !isValid(shift2)
-    ) {
-      return [];
-    }
-    if (shifts === 1) {
-      return [
-        {
-          starts,
-          ends,
-          duration: hoursBetween(starts, ends),
-        },
-      ];
-    }
-    if (shifts === 2) {
-      return [
-        {
-          starts,
-          ends: shift1,
-          duration: hoursBetween(starts, shift1),
-        },
-        {
-          starts: shift1,
-          ends,
-          duration: hoursBetween(shift1, ends),
-        },
-      ];
-    }
-
-    if (shifts === 3) {
-      return [
-        {
-          starts,
-          ends: shift1,
-          duration: hoursBetween(starts, shift1),
-        },
-        {
-          starts: shift1,
-          ends: shift2,
-          duration: hoursBetween(shift1, shift2),
-        },
-        {
-          starts: shift2,
-          ends,
-          duration: hoursBetween(shift2, ends),
-        },
-      ];
-    }
-
-    return [];
-  }, [
-    shifts,
-    values.closing_time,
-    values.opening_time,
-    values.shift_time_0,
-    values.shift_time_1,
-  ]);
+  const shiftHours = useMemo(() => calculateShiftHours(values), [values]);
 
   return (
     <FormFrame
       title="Let's create a new schedule"
       subTitle="Set opening, closing and shifts change times"
       currentStep={3}
+      onStepClick={onStepChange}
       {...props}
     >
       <div className="grid grid-cols-1 md:grid-cols-2 gap-3 justify-between">
@@ -184,8 +104,8 @@ export const Step3: FC<Step3Props> = (props) => {
 
         <div>
           <div className="flex flex-col gap-2">
-            {shiftHours.map((shift, index) => (
-              <div key={index}>
+            {shiftHours.map((shift) => (
+              <div key={shift.id}>
                 <div className="flex flex-row gap-4">
                   <div className="flex flex-row items-center gap-2 grow">
                     <div className="text-md text-gray-700">
