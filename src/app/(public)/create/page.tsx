@@ -11,6 +11,7 @@ import {
   ScheduleFormValues,
 } from "@/app/(public)/create/components/schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { nanoid } from "nanoid";
 import { Step1 } from "./components/Step1";
 import { Step2 } from "./components/Step2";
 import { Step3 } from "./components/Step3";
@@ -62,25 +63,25 @@ export default function CreateSchedulePage() {
     router.back();
   }, [router]);
 
-  const shifts = form.watch("shifts");
+  // const shifts = form.watch("shifts");
 
-  const updateShiftsRequiredStaff = useCallback(
-    (rolesForm: RolesFormValues, shifts: 1 | 2 | 3) => {
-      rolesForm.roles.forEach((role, index) => {
-        const requiredStaff = role.required_staff;
-        const newRequiredStaff = requiredStaff.map((staff) => {
-          return staff.length === shifts ? staff : repeat(1, shifts);
-        });
+  // const updateShiftsRequiredStaff = useCallback(
+  //   (rolesForm: RolesFormValues, shifts: 1 | 2 | 3) => {
+  //     rolesForm.roles.forEach((role, index) => {
+  //       const requiredStaff = role.required_staff;
+  //       const newRequiredStaff = requiredStaff.map((staff) => {
+  //         return staff.length === shifts ? staff : repeat(1, shifts);
+  //       });
+  //
+  //       rolesForm.roles[index].required_staff = newRequiredStaff;
+  //     });
+  //   },
+  //   [],
+  // );
 
-        rolesForm.roles[index].required_staff = newRequiredStaff;
-      });
-    },
-    [],
-  );
-
-  useEffect(() => {
-    updateShiftsRequiredStaff(rolesForm.getValues(), shifts);
-  }, [rolesForm, shifts, updateShiftsRequiredStaff]);
+  // useEffect(() => {
+  //   updateShiftsRequiredStaff(rolesForm.getValues(), shifts);
+  // }, [rolesForm, shifts, updateShiftsRequiredStaff]);
 
   const handleCreateSchedule = useCallback(async () => {
     await form.trigger();

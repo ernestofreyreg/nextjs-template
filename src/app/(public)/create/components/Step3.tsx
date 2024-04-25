@@ -2,7 +2,6 @@ import { FC, useMemo } from "react";
 import { useFormContext } from "react-hook-form";
 import { format } from "date-fns";
 import {
-  calculateShiftHours,
   FormActionsProps,
   ScheduleFormValues,
 } from "@/app/(public)/create/components/schemas";
@@ -14,6 +13,7 @@ import {
   FormLabel,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { calculateShiftHours } from "@/services/helpers";
 
 type Step3Props = {
   onStepChange: (step: number) => void;

@@ -1,4 +1,4 @@
-import { FC, useCallback, useEffect, useMemo } from "react";
+import { FC, useCallback, useMemo } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Popover,
@@ -7,22 +7,24 @@ import {
 } from "@/components/ui/popover";
 import { maxBy, minBy, reduce, identity, range, flatten } from "ramda";
 import { format } from "date-fns";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Input } from "@/components/ui/input";
+import { calculateShiftHours } from "@/services/helpers";
 import {
-  calculateShiftHours,
   RequiredStaff,
   RequiredStaffFormSchema,
   RequiredStaffFormValues,
   ScheduleFormValues,
 } from "./schemas";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Input } from "@/components/ui/input";
 
 export interface WeekShiftInputProps {
   scheduleValues: ScheduleFormValues;
   name: string;
   value: RequiredStaff;
   onChange: (value: RequiredStaff) => void;
+  onOpen?: () => void;
+  onClose?: () => void;
 }
 
 const days = [
@@ -40,6 +42,8 @@ export const WeekShiftInput: FC<WeekShiftInputProps> = ({
   scheduleValues,
   value,
   onChange,
+  onClose,
+  onOpen,
 }) => {
   const form = useForm<RequiredStaffFormValues>({
     defaultValues: { required_staff: value },
@@ -52,25 +56,27 @@ export const WeekShiftInput: FC<WeekShiftInputProps> = ({
   );
 
   const minMaxStaff = useMemo(() => {
-    const values = flatten(form.getValues().required_staff);
-
+    const daysSelected = flatten(
+      value.filter((dayIndex, index) => scheduleValues.open_days[index]),
+    );
     return {
-      min: reduce(minBy(identity), values[0], values),
-      max: reduce(maxBy(identity), values[0], values),
+      min: reduce(minBy(identity), daysSelected[0], daysSelected),
+      max: reduce(maxBy(identity), daysSelected[0], daysSelected),
     };
-  }, [form]);
-
-  useEffect(() => {
-    form.setValue("required_staff", value);
-  }, [form, value]);
+  }, [scheduleValues.open_days, value]);
 
   const handleOpenChange = useCallback(
     (isOpen: boolean) => {
+      if (isOpen) {
+        onOpen?.();
+      } else {
+        onClose?.();
+      }
       if (!isOpen) {
         onChange(form.getValues().required_staff);
       }
     },
-    [form, onChange],
+    [form, onChange, onClose, onOpen],
   );
 
   return (
