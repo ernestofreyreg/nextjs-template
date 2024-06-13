@@ -48,6 +48,24 @@ export type Database = {
           },
         ]
       }
+      countries: {
+        Row: {
+          created_at: string
+          id: string
+          name: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          name?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          name?: string | null
+        }
+        Relationships: []
+      }
       employees: {
         Row: {
           archived: boolean
@@ -145,59 +163,194 @@ export type Database = {
           },
         ]
       }
-      schedules: {
+      people: {
         Row: {
-          archived: boolean
-          closing_time: string | null
+          address: string | null
+          country_id: string | null
+          created_at: string
+          dob: string | null
+          email: string | null
+          id: string
+          name: string | null
+          phone: string | null
+          picture: string | null
+        }
+        Insert: {
+          address?: string | null
+          country_id?: string | null
+          created_at?: string
+          dob?: string | null
+          email?: string | null
+          id?: string
+          name?: string | null
+          phone?: string | null
+          picture?: string | null
+        }
+        Update: {
+          address?: string | null
+          country_id?: string | null
+          created_at?: string
+          dob?: string | null
+          email?: string | null
+          id?: string
+          name?: string | null
+          phone?: string | null
+          picture?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "public_people_country_id_fkey"
+            columns: ["country_id"]
+            isOneToOne: false
+            referencedRelation: "countries"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      public_roles: {
+        Row: {
           created_at: string
           id: string
-          name: string
-          open_0: boolean | null
-          open_1: boolean | null
-          open_2: boolean | null
-          open_3: boolean | null
-          open_4: boolean | null
-          open_5: boolean | null
-          open_6: boolean | null
-          opening_time: string | null
+          name: string | null
+          public_schedule_id: string | null
+          rate_cents: number | null
+          required_staff: Json | null
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          name?: string | null
+          public_schedule_id?: string | null
+          rate_cents?: number | null
+          required_staff?: Json | null
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          name?: string | null
+          public_schedule_id?: string | null
+          rate_cents?: number | null
+          required_staff?: Json | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "public_roles_public_schedule_id_fkey"
+            columns: ["public_schedule_id"]
+            isOneToOne: false
+            referencedRelation: "public_schedules"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      public_schedules: {
+        Row: {
+          archived: boolean
+          closing_time: string
+          created_at: string
+          id: string
+          name: string | null
+          open_days: boolean[]
+          opening_time: string
           shift_time_0: string | null
           shift_time_1: string | null
+          shifts: number
         }
         Insert: {
           archived?: boolean
-          closing_time?: string | null
+          closing_time: string
           created_at?: string
           id?: string
-          name: string
-          open_0?: boolean | null
-          open_1?: boolean | null
-          open_2?: boolean | null
-          open_3?: boolean | null
-          open_4?: boolean | null
-          open_5?: boolean | null
-          open_6?: boolean | null
-          opening_time?: string | null
+          name?: string | null
+          open_days: boolean[]
+          opening_time: string
           shift_time_0?: string | null
           shift_time_1?: string | null
+          shifts: number
         }
         Update: {
           archived?: boolean
-          closing_time?: string | null
+          closing_time?: string
           created_at?: string
           id?: string
-          name?: string
-          open_0?: boolean | null
-          open_1?: boolean | null
-          open_2?: boolean | null
-          open_3?: boolean | null
-          open_4?: boolean | null
-          open_5?: boolean | null
-          open_6?: boolean | null
-          opening_time?: string | null
+          name?: string | null
+          open_days?: boolean[]
+          opening_time?: string
           shift_time_0?: string | null
           shift_time_1?: string | null
+          shifts?: number
         }
         Relationships: []
+      }
+      schedules: {
+        Row: {
+          archived: boolean
+          closing_time: string
+          created_at: string
+          id: string
+          name: string | null
+          open_days: boolean[]
+          opening_time: string
+          shift_time_0: string | null
+          shift_time_1: string | null
+          shifts: number
+        }
+        Insert: {
+          archived?: boolean
+          closing_time: string
+          created_at?: string
+          id?: string
+          name?: string | null
+          open_days: boolean[]
+          opening_time: string
+          shift_time_0?: string | null
+          shift_time_1?: string | null
+          shifts: number
+        }
+        Update: {
+          archived?: boolean
+          closing_time?: string
+          created_at?: string
+          id?: string
+          name?: string | null
+          open_days?: boolean[]
+          opening_time?: string
+          shift_time_0?: string | null
+          shift_time_1?: string | null
+          shifts?: number
+        }
+        Relationships: []
+      }
+      service_types: {
+        Row: {
+          created_at: string
+          description: string | null
+          id: number
+          image_id: string | null
+          name: string | null
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          id?: number
+          image_id?: string | null
+          name?: string | null
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          id?: number
+          image_id?: string | null
+          name?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "public_service_types_image_id_fkey"
+            columns: ["image_id"]
+            isOneToOne: false
+            referencedRelation: "objects"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       shifts: {
         Row: {

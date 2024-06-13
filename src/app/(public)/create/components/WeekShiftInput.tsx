@@ -1,4 +1,5 @@
-import { FC, useCallback, useMemo } from "react";
+import { FC, useCallback, useEffect, useMemo, useState } from "react";
+import { clsx } from "clsx";
 import { Button } from "@/components/ui/button";
 import {
   Popover,
@@ -45,6 +46,7 @@ export const WeekShiftInput: FC<WeekShiftInputProps> = ({
   onClose,
   onOpen,
 }) => {
+  const [isLocked, setIsLocked] = useState(true);
   const form = useForm<RequiredStaffFormValues>({
     defaultValues: { required_staff: value },
     resolver: zodResolver(RequiredStaffFormSchema),
@@ -78,6 +80,54 @@ export const WeekShiftInput: FC<WeekShiftInputProps> = ({
     },
     [form, onChange, onClose, onOpen],
   );
+
+  const firstValue = form.watch("required_staff.0.0");
+  const values = form.watch();
+  const onFirstFocus = useCallback(() => {
+    const daysSelected = flatten(
+      values.required_staff.filter(
+        (dayIndex, index) => scheduleValues.open_days[index],
+      ),
+    );
+
+    const min = reduce(minBy(identity), daysSelected[0], daysSelected);
+    const max = reduce(maxBy(identity), daysSelected[0], daysSelected);
+    if (min === max && !isLocked) {
+      setIsLocked(true);
+    }
+  }, [isLocked, scheduleValues.open_days, values]);
+
+  // useEffect(() => {
+  //   const firstDayStaff = values[0][0][0];
+  //   if (isLocked && firstDayStaff !== undefined) {
+  //     shiftHours.forEach((shift, shiftIndex) => {
+  //       range(0, 7)
+  //         .filter((dayIndex) => scheduleValues.open_days[dayIndex])
+  //         .forEach((dayIndex) => {
+  //           if (dayIndex === 0 && shiftIndex === 0) return;
+  //           form.setValue(
+  //             `required_staff.${dayIndex}.${shiftIndex}`,
+  //             firstDayStaff,
+  //           );
+  //         });
+  //     });
+  //   }
+  // }, [form, isLocked, scheduleValues.open_days, shiftHours, values]);
+
+  useEffect(() => {
+    if (firstValue === undefined || Number.isNaN(firstValue) || !isLocked) {
+      return;
+    }
+
+    shiftHours.forEach((shift, shiftIndex) => {
+      range(0, 7)
+        .filter((dayIndex) => scheduleValues.open_days[dayIndex])
+        .forEach((dayIndex) => {
+          if (dayIndex === 0 && shiftIndex === 0) return;
+          form.setValue(`required_staff.${dayIndex}.${shiftIndex}`, firstValue);
+        });
+    });
+  }, [firstValue, form, isLocked, scheduleValues.open_days, shiftHours]);
 
   return (
     <Popover onOpenChange={handleOpenChange}>
@@ -118,20 +168,36 @@ export const WeekShiftInput: FC<WeekShiftInputProps> = ({
               </div>
               {range(0, 7)
                 .filter((dayIndex) => scheduleValues.open_days[dayIndex])
-                .map((dayIndex) => (
-                  <div key={days[dayIndex]} className="w-12 shrink-0">
-                    <Input
-                      type="text"
-                      className="w-full appearance-none"
-                      {...form.register(
-                        `required_staff.${dayIndex}.${shiftIndex}`,
-                        {
-                          valueAsNumber: true,
-                        },
-                      )}
-                    />
-                  </div>
-                ))}
+                .map((dayIndex) => {
+                  const isDisabled =
+                    isLocked && !(dayIndex === 0 && shiftIndex === 0);
+                  return (
+                    <div key={days[dayIndex]} className="w-12 shrink-0">
+                      <Input
+                        type="text"
+                        className={clsx(
+                          "w-full appearance-none",
+                          isDisabled && "bg-gray-100 cursor-pointer",
+                        )}
+                        onClick={
+                          isDisabled ? () => setIsLocked(false) : undefined
+                        }
+                        readOnly={isDisabled}
+                        {...form.register(
+                          `required_staff.${dayIndex}.${shiftIndex}`,
+                          {
+                            valueAsNumber: true,
+                          },
+                        )}
+                        onFocus={
+                          dayIndex === 0 && shiftIndex === 0
+                            ? onFirstFocus
+                            : undefined
+                        }
+                      />
+                    </div>
+                  );
+                })}
             </div>
           ))}
         </div>

@@ -16,6 +16,7 @@ import { NumericFormat } from "react-number-format";
 import { repeat } from "ramda";
 import { calculateHumanHours } from "@/services/helpers";
 import { WeekShiftInput } from "./WeekShiftInput";
+import { convertCentsToDollar, toCents } from "@/services/converters";
 
 type Step4Props = {
   onStepChange: (step: number) => void;
@@ -71,6 +72,10 @@ export const Step4: FC<Step4Props> = ({
       }),
     [values, scheduleValues],
   );
+
+  useEffect(() => {
+    console.log(values);
+  }, [values]);
 
   return (
     <FormFrame
@@ -175,11 +180,39 @@ export const Step4: FC<Step4Props> = ({
                     {calculatedValues[index].humanHours} human/hours week
                   </div>
                   <div className="text-xs text-gray-500">
-                    ${calculatedValues[index].weekTotal} Weekly total
+                    {convertCentsToDollar(
+                      toCents(calculatedValues[index].weekTotal),
+                    )}{" "}
+                    Weekly total
                   </div>
                 </div>
               </div>
             ))}
+          </div>
+
+          <div className="flex flex-col">
+            <div className="text-sm text-gray-700 p-1">
+              <strong>
+                {calculatedValues.reduce(
+                  (acc, value) => acc + value.humanHours,
+                  0,
+                )}
+              </strong>{" "}
+              Total human/hours per week
+            </div>
+            <div className="text-sm text-gray-700 p-1">
+              <strong>
+                {convertCentsToDollar(
+                  toCents(
+                    calculatedValues.reduce(
+                      (acc, value) => acc + value.weekTotal,
+                      0,
+                    ),
+                  ),
+                )}
+              </strong>{" "}
+              Total weekly salary
+            </div>
           </div>
 
           <div>

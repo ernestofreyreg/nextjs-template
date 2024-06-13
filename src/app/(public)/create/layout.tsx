@@ -11,7 +11,7 @@ const robotoSerif = Roboto_Serif({
 });
 
 export const metadata = {
-  title: "CrewRein",
+  title: "crewrein",
   description: "Shift Management Made Easy",
 };
 

@@ -2,8 +2,8 @@ import "@/styles/globals.css";
 import Providers from "@/services/providers";
 
 export const metadata = {
-  title: "CrewRein",
-  description: "by Ernesto F.",
+  title: "crewrein",
+  description: "by codexsw inc",
 };
 
 export default async function RootLayout({ children }) {
